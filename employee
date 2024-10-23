@@ -1,0 +1,32 @@
+create database dbms;
+use dbms; 
+
+create table dept(
+deptno int,
+deptname varchar(20), dloc varchar(20),
+primary key(deptno)
+);
+
+create table incentives(
+empno int, incentive_date date, incentive_amt real,
+primary key(incentive_date,incentive_amt ),
+foreign key(empno) references employee(empno)
+);
+
+create table employee(
+empno int , empname varchar(20), mgrno int, 
+hiredate date, sal real, deptno int,
+primary key(empno),
+foreign key(deptno) references dept(deptno)
+);
+
+create table project(
+pno int, ploc varchar(20),projectname varchar(20),
+primary key(pno)
+); 
+
+create table assigned_to(
+empno int, pno int,job_role varchar(20),
+foreign key(empno) references employee(empno),
+foreign key(pno) references project(pno)
+);
