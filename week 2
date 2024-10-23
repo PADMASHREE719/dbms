@@ -1,0 +1,102 @@
+show databases;
+create database insurance2;
+use insurance2;
+
+create table branch( 
+branch_name varchar(20), branch_city varchar(20), assest real,
+primary key(branch_name)
+);
+
+create table bankaccount( 
+account_no int,
+branch_name varchar(20), balance real,
+primary key(account_no),
+foreign key(branch_name) references branch(branch_name)
+);
+
+create table bankcustomer( 
+customer_name varchar(20),
+customer_street varchar(20), customercity varchar(20),
+primary key(customer_name)
+);
+
+create table depositor( 
+customer_name varchar(20),account_no int,
+primary key(customer_name,account_no ),
+foreign key(customer_name) references bankcustomer(customer_name),
+foreign key(account_no) references bankaccount(account_no)
+);
+
+create table loan( 
+loan_no int,
+branch_name varchar(20), amount real,
+primary key(loan_no),
+foreign key(branch_name) references branch(branch_name)
+);
+
+insert into branch values('SBI chamrajpet','banglore',50000);
+insert into branch values('SBI residency_road','banglore',10000); 
+insert into branch values('SBI shivaji_road','bombay',20000);
+insert into branch values('SBI parliment_road','delhi',10000);
+insert into branch values('SBI jantaraman_road','delhi',20000);
+
+insert into bankaccount values(1,'SBI chamrajpet',2000);
+insert into bankaccount values(2,'SBI residency_road',5000); 
+insert into bankaccount values(3,'SBI shivaji_road',6000);
+insert into bankaccount values(4,'SBI parliment_road',9000);
+insert into bankaccount values(5,'SBI jantaraman_road',8000);
+insert into bankaccount values(6,'SBI shivaji_road',4000);
+insert into bankaccount values(8,'SBI residency_road',4000); 
+insert into bankaccount values(9,'SBI parliment_road',3000);
+insert into bankaccount values(10,'SBI residency_road',5000);
+insert into bankaccount values(11,'SBI jantaraman_road',2000);
+
+insert into bankcustomer values('Avinash','Bull_Temple_Roadt','banglore');
+insert into bankcustomer values('dinesh','Bannergatta_Road','banglore'); 
+insert into bankcustomer values('mohan','NationalCollege_Road','banglore');
+insert into bankcustomer values('nikhil','Akbar_Road','delhi');
+insert into bankcustomer values('ravi','Prithviraj_Road','delhi');
+
+insert into depositor values('Avinash',1);
+insert into depositor values('dinesh',2); 
+insert into depositor values('nikhil',4);
+insert into depositor values('ravi',5);
+insert into depositor values('Avinash',8);
+insert into depositor values('nikhil',9);
+insert into depositor values('dinesh',10);
+insert into depositor values('nikhil',11);
+
+insert into loan values(1,'SBI chamrajpet',1000);
+insert into loan values(2,'SBI residency_road',2000); 
+insert into loan values(3,'SBI shivaji_road',3000);
+insert into loan values(4,'SBI parliment_road',4000);
+insert into loan values(5,'SBI jantaraman_road',5000);
+
+alter table branch rename column assest to assests_in_lakh;
+select branch_name,assests_in_lakh from branch;
+
+select customer_name,account_no from depositor where account_no in (select account_no from bankaccount where branch_name='SBI residency_road')
+group by customer_name having count(customer_name)>=2;
+
+CREATE VIEW BranchLoanSum AS SELECT branch_name, SUM(amount) AS total_loan_amount FROM loan GROUP BY branch_name; 
+SELECT * FROM BranchLoanSum;
+
+select customer_name from depositor where account_no in (select account_no from bankaccount where branch_name in (select branch_name from branch where branch_city='delhi'))
+group by customer_name having count(customer_name)>=2 ;
+
+select distinct customer_name
+from bankcustomer where customer_name not in
+(select customer_name from depositor );
+
+select branch_name from branch where assests_in_lakh > all (select assests_in_lakh from branch where branch_city= 'banglore');
+
+delete from bankaccount where branch_name IN (select branch_name from branch where branch_city='bombay');
+select * from bankaccount;
+
+Update bankaccount set balance=balance+balance*0.05;
+select * from bankaccount;
+
+SELECT * FROM loan ORDER BY amount DESC;
+ 
+(SELECT CUSTOMER_NAME FROM DEPOSITOR ) UNION (SELECT
+CUSTOMER_NAME FROM bankcustomer);
