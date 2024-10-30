@@ -13,7 +13,7 @@ primary key(incentive_date,incentive_amt ),
 foreign key(empno) references employee(empno)
 );
 
-create table employee(
+create table employee1(
 empno int , empname varchar(20), mgrno int, 
 hiredate date, sal real, deptno int,
 primary key(empno),
@@ -30,3 +30,37 @@ empno int, pno int,job_role varchar(20),
 foreign key(empno) references employee(empno),
 foreign key(pno) references project(pno)
 );
+
+insert into dept values(1,'HR','Delhi');
+insert into dept values(2,'HR','Mysuru');
+insert into dept values(3,'finance','Mumbai');
+insert into dept values(4,'IT','Banglore');
+insert into dept values(5,'IT','Hydebad');
+
+insert into incentives values(101,'11-10-24',1000);
+insert into incentives values(102,'01-10-24',2000);
+insert into incentives values(103,'13-10-24',3000);
+insert into incentives values(104,'19-10-24',4000);
+insert into incentives values(105,'24-10-24',5000);
+
+
+insert into employee1 values(101,'Raj',102,'11-10-05',10000,1);
+insert into employee1 values(102,'Priyam',30,'01-10-05',200000,1);
+insert into employee1 values(103,'Adi',102,'13-10-05',15000,2);
+insert into employee1 values(104,'Asha',101,'19-10-05',5000,3);
+insert into employee1 values(105,'Padma',102,'24-10-05',50000,4);
+
+
+insert into project values(11,'Delhi','ds');
+insert into project values(12,'Delhi','dbms');
+insert into project values(13,'Mumbai','ds');
+insert into project values(14,'Delhi','ooj');
+insert into project values(15,'Banglore','ds');
+
+insert into assigned_to values(101,11,'Developer');
+insert into assigned_to values(102,12,'Manager');
+insert into assigned_to values(103,13,'Analyst');
+insert into assigned_to values(104,14,'Texter');
+insert into assigned_to values(105,15,'Drawer');
+
+select mgrno from employee1 having count(mgrno)>= all(select count(mgrno) group by mgrno); 
