@@ -1,0 +1,92 @@
+create database dbms1;
+use dbms1; 
+
+create table dept(
+deptno int,
+deptname varchar(20), dloc varchar(20),
+primary key(deptno)
+);
+
+create table incentives(
+empno int, incentive_date date, incentive_amt real,
+primary key(empno,incentive_date ),
+foreign key(empno) references employee(empno)
+);
+
+create table employee(
+empno int , empname varchar(20), mgrno int, 
+hiredate date, sal real, deptno int,
+primary key(empno),
+foreign key(deptno) references dept(deptno)
+);
+
+create table project(
+pno int, ploc varchar(20),projectname varchar(20),
+primary key(pno)
+); 
+
+create table assigned_to(
+empno int, pno int,job_role varchar(20),
+primary key(empno,pno),
+foreign key(empno) references employee(empno),
+foreign key(pno) references project(pno)
+);
+
+insert into dept values(1,'HR','Delhi');
+insert into dept values(2,'HR','Mysuru');
+insert into dept values(3,'finance','Mumbai');
+insert into dept values(4,'IT','Banglore');
+insert into dept values(5,'IT','Hydebad');
+
+insert into incentives values(101,'11-10-24',1000);
+insert into incentives values(102,'01-10-24',2000);
+insert into incentives values(103,'13-10-24',3000);
+insert into incentives values(104,'19-10-24',4000);
+insert into incentives values(105,'24-10-24',5000);
+
+
+insert into employee values(101,'Raj',102,'11-10-05',10000,1);
+insert into employee values(102,'Priyam',30,'01-10-05',200000,1);
+insert into employee values(103,'Adi',102,'13-10-05',15000,2);
+insert into employee values(104,'Asha',101,'19-10-05',5000,3);
+insert into employee values(105,'Padma',102,'24-10-05',50000,4);
+insert into employee values(106,'Padma',102,'24-10-05',50000,4);
+
+
+insert into project values(11,'Delhi','ds');
+insert into project values(12,'Delhi','dbms');
+insert into project values(13,'Mumbai','ds');
+insert into project values(14,'Delhi','ooj');
+insert into project values(15,'Banglore','ds');
+
+insert into assigned_to values(101,11,'Developer');
+insert into assigned_to values(102,12,'Manager');
+insert into assigned_to values(103,13,'Analyst');
+insert into assigned_to values(104,14,'Texter');
+insert into assigned_to values(105,15,'Drawer');
+
+select empno from assigned_to where pno in(select pno from project where ploc in("Banglore","Hydebad","Mysuru")); 
+
+select empno from employee where empno not in(select empno from incentives);
+
+select  e.empname,e.empno,e.deptno,a.job_role,d.dloc,p.ploc 
+from employee e 
+join assigned_to a on e.empno=a.empno
+join dept d on e.deptno=d.deptno
+join project p on a.pno=p.pno
+where p.ploc=d.dloc;
+
+SELECT empname 
+FROM employee 
+WHERE empno IN (
+    SELECT mgrno
+    FROM employee
+    GROUP BY mgrno
+    HAVING COUNT(*) >= ALL (
+        SELECT COUNT(*)
+        FROM employee
+        GROUP BY mgrno
+    )
+);
+
+select e.empname from employee e, employee t where e.mgrno
