@@ -1,0 +1,382 @@
+use mysql;
+create database xyz;
+create table example1
+(
+ name char(20),
+ age int);
+ 
+ insert into example1 values ('xyz', 90);
+ commit;
+ 
+ select * from example1;
+ 
+ show tables;
+
+
+lab2(19/10)
+show databases;
+use EMPLOYEE;
+create table person(
+driver_id varchar(10),name varchar(20),address varchar(30),
+primary key (driver_id));
+create table car(
+reg_no varchar(10),model varchar(20),year int, 
+primary key (reg_no));
+create table accident1(
+report_no int,accident_date date ,location varchar(30),
+primary key (report_no));
+create table own(
+driver_id varchar(10),reg_no varchar(20),
+primary key (driver_id,reg_no),
+foreign key (driver_id) references person (driver_id),
+foreign key (reg_no) references car (reg_no));
+create table participate1(
+driver_id varchar(10),reg_no varchar(20),report_no int, damage_amt int,
+primary key (driver_id,reg_no,report_no),
+foreign key (driver_id) references person (driver_id),
+foreign key (reg_no) references car (reg_no),
+foreign key (report_no) references accident (report_no)
+);
+insert into person(driver_id,name,address)
+values('A01','Richard','Srinivas nagar');
+insert into person(driver_id,name,address)
+values('A02','Pradeep','Rajaji nagar');
+insert into person(driver_id,name,address)
+values('A03','Smith','Ashok nagar');
+insert into person(driver_id,name,address)
+values('A04','Venu','N R Colony');
+insert into person(driver_id,name,address)
+values('A05','Jhon','Hanumanth nagar');
+insert into car(reg_no,model,year)
+values('KA052250','Indica',1990);
+insert into car(reg_no,model,year)
+values('KA031181','Lancer',1957);
+insert into car(reg_no,model,year)
+values('KA095477','Toyota',1998);
+insert into car(reg_no,model,year)
+values('KA053408','Honda',2008);
+insert into accident1(report_no,accident_date,location)
+values(11,'01-01-03','Mysuru Road');
+insert into accident1(report_no,accident_date,location)
+values(12,'02-02-04','South end Circle');
+insert into accident1(report_no,accident_date,location)
+values(13,'21-01-03','Bull temple Road');
+insert into accident1(report_no,accident_date,location)
+values(14,'17-02-08','Mysore Road');
+insert into accident1(report_no,accident_date,location)
+values(15,'04-03-05','Kanakpura Road');
+insert into own (driver_id,reg_no)
+values('A01','KA052250');
+insert into own (driver_id,reg_no)
+values('A02','KA053408');
+insert into own (driver_id,reg_no)
+values('A03','KA031181');
+insert into own (driver_id,reg_no)
+values('A04','KA095477');
+insert into own (driver_id,reg_no)
+values('A05','KA041702');
+insert into participate1(driver_id,reg_no,report_no,damage_amt)
+values('A01','KA052250',11,10000);
+insert into participate1(driver_id,reg_no,report_no,damage_amt)
+values('A02','KA053408',12,50000);
+insert into participate1(driver_id,reg_no,report_no,damage_amt)
+values('A03','KA095477',13,25000);
+insert into participate1(driver_id,reg_no,report_no,damage_amt)
+values('A04','KA031181',14,3000);
+insert into participate1(driver_id,reg_no,report_no,damage_amt)
+values('A05','KA041702',15,5000);
+select * from person;
+select * from car;
+select * from own;
+select * from participate1;
+select * from accident1;
+select accident_date,location from accident1;
+update participate1 set damage_amt=25000
+where reg_no='KA053408' and report_no=12;
+select * from participate1;
+insert into accident1(report_no,accident_date,location)
+values(16,'2008-03-08','Domlur');
+select * from accident1;
+select driver_id from participate1 where damage_amt>=25000;
+select avg(damage_amt) from participate1;
+SELECT MAX(damage_amt) FROM PARTICIPATE1;
+DELETE FROM PARTICIPATE1 WHERE
+DAMAGE_AMT < (SELECT AVG (DAMAGE_AMT) FROM PARTICIPATE1);
+
+
+lab 3
+show databases;
+create database insurance2;
+use insurance2;
+
+create table branch( 
+branch_name varchar(20), branch_city varchar(20), assest real,
+primary key(branch_name)
+);
+
+create table bankaccount( 
+account_no int,
+branch_name varchar(20), balance real,
+primary key(account_no),
+foreign key(branch_name) references branch(branch_name)
+);
+
+create table bankcustomer( 
+customer_name varchar(20),
+customer_street varchar(20), customercity varchar(20),
+primary key(customer_name)
+);
+
+create table depositor( 
+customer_name varchar(20),account_no int,
+primary key(customer_name,account_no ),
+foreign key(customer_name) references bankcustomer(customer_name),
+foreign key(account_no) references bankaccount(account_no)
+);
+
+create table loan( 
+loan_no int,
+branch_name varchar(20), amount real,
+primary key(loan_no),
+foreign key(branch_name) references branch(branch_name)
+);
+
+insert into branch values('SBI chamrajpet','banglore',50000);
+insert into branch values('SBI residency_road','banglore',10000); 
+insert into branch values('SBI shivaji_road','bombay',20000);
+insert into branch values('SBI parliment_road','delhi',10000);
+insert into branch values('SBI jantaraman_road','delhi',20000);
+
+insert into bankaccount values(1,'SBI chamrajpet',2000);
+insert into bankaccount values(2,'SBI residency_road',5000); 
+insert into bankaccount values(3,'SBI shivaji_road',6000);
+insert into bankaccount values(4,'SBI parliment_road',9000);
+insert into bankaccount values(5,'SBI jantaraman_road',8000);
+insert into bankaccount values(6,'SBI shivaji_road',4000);
+insert into bankaccount values(8,'SBI residency_road',4000); 
+insert into bankaccount values(9,'SBI parliment_road',3000);
+insert into bankaccount values(10,'SBI residency_road',5000);
+insert into bankaccount values(11,'SBI jantaraman_road',2000);
+
+insert into bankcustomer values('Avinash','Bull_Temple_Roadt','banglore');
+insert into bankcustomer values('dinesh','Bannergatta_Road','banglore'); 
+insert into bankcustomer values('mohan','NationalCollege_Road','banglore');
+insert into bankcustomer values('nikhil','Akbar_Road','delhi');
+insert into bankcustomer values('ravi','Prithviraj_Road','delhi');
+
+insert into depositor values('Avinash',1);
+insert into depositor values('dinesh',2); 
+insert into depositor values('nikhil',4);
+insert into depositor values('ravi',5);
+insert into depositor values('Avinash',8);
+insert into depositor values('nikhil',9);
+insert into depositor values('dinesh',10);
+insert into depositor values('nikhil',11);
+
+insert into loan values(1,'SBI chamrajpet',1000);
+insert into loan values(2,'SBI residency_road',2000); 
+insert into loan values(3,'SBI shivaji_road',3000);
+insert into loan values(4,'SBI parliment_road',4000);
+insert into loan values(5,'SBI jantaraman_road',5000);
+
+alter table branch rename column assest to assests_in_lakh;
+select branch_name,assests_in_lakh from branch;
+
+select customer_name,account_no from depositor where account_no in (select account_no from bankaccount where branch_name='SBI residency_road')
+group by customer_name having count(customer_name)>=2;
+
+CREATE VIEW BranchLoanSum AS SELECT branch_name, SUM(amount) AS total_loan_amount FROM loan GROUP BY branch_name; 
+SELECT * FROM BranchLoanSum;
+
+select customer_name from depositor where account_no in (select account_no from bankaccount where branch_name in (select branch_name from branch where branch_city='delhi'))
+group by customer_name having count(customer_name)>=2 ;
+
+select distinct customer_name
+from bankcustomer where customer_name not in
+(select customer_name from depositor );
+
+select branch_name from branch where assests_in_lakh > all (select assests_in_lakh from branch where branch_city= 'banglore');
+
+delete from bankaccount where branch_name IN (select branch_name from branch where branch_city='bombay');
+select * from bankaccount;
+
+Update bankaccount set balance=balance+balance*0.05;
+select * from bankaccount;
+
+SELECT * FROM loan ORDER BY amount DESC;
+ 
+(SELECT CUSTOMER_NAME FROM DEPOSITOR ) UNION (SELECT
+CUSTOMER_NAME FROM bankcustomer);
+
+create database dbms;
+use dbms; 
+
+create table dept(
+deptno int,
+deptname varchar(20), dloc varchar(20),
+primary key(deptno)
+);
+
+create table incentives(
+empno int, incentive_date date, incentive_amt real,
+primary key(incentive_date,incentive_amt ),
+foreign key(empno) references employee(empno)
+);
+
+create table employee1(
+empno int , empname varchar(20), mgrno int, 
+hiredate date, sal real, deptno int,
+primary key(empno),
+foreign key(deptno) references dept(deptno)
+);
+
+create table project(
+pno int, ploc varchar(20),projectname varchar(20),
+primary key(pno)
+); 
+
+create table assigned_to(
+empno int, pno int,job_role varchar(20),
+foreign key(empno) references employee(empno),
+foreign key(pno) references project(pno)
+);
+
+insert into dept values(1,'HR','Delhi');
+insert into dept values(2,'HR','Mysuru');
+insert into dept values(3,'finance','Mumbai');
+insert into dept values(4,'IT','Banglore');
+insert into dept values(5,'IT','Hydebad');
+
+insert into incentives values(101,'11-10-24',1000);
+insert into incentives values(102,'01-10-24',2000);
+insert into incentives values(103,'13-10-24',3000);
+insert into incentives values(104,'19-10-24',4000);
+insert into incentives values(105,'24-10-24',5000);
+
+
+insert into employee1 values(101,'Raj',102,'11-10-05',10000,1);
+insert into employee1 values(102,'Priyam',30,'01-10-05',200000,1);
+insert into employee1 values(103,'Adi',102,'13-10-05',15000,2);
+insert into employee1 values(104,'Asha',101,'19-10-05',5000,3);
+insert into employee1 values(105,'Padma',102,'24-10-05',50000,4);
+
+
+insert into project values(11,'Delhi','ds');
+insert into project values(12,'Delhi','dbms');
+insert into project values(13,'Mumbai','ds');
+insert into project values(14,'Delhi','ooj');
+insert into project values(15,'Banglore','ds');
+
+insert into assigned_to values(101,11,'Developer');
+insert into assigned_to values(102,12,'Manager');
+insert into assigned_to values(103,13,'Analyst');
+insert into assigned_to values(104,14,'Texter');
+insert into assigned_to values(105,15,'Drawer');
+
+select mgrno from employee1 having count(mgrno)>= all(select count(mgrno) group by mgrno); 
+
+create database dbms2;
+use dbms2;
+
+create table Supplier(
+sid int, sname varchar(20), city varchar(20),
+primary key(sid)
+);
+
+create table Parts(
+pid int, pname varchar(20), color varchar(20),
+primary key(pid)
+);
+
+create table Catalog(
+sid int, pid int, cost real,
+primary key(sid,pid),
+foreign key(sid) references Supplier(sid),
+foreign key(pid) references Parts(pid)
+);
+
+insert into Supplier values(10001,"Acme Widget","Banglore");
+insert into Supplier values(10002,"Jhons","Kolkata");
+insert into Supplier values(10003,"Vimal","Mumbai");
+insert into Supplier values(10004,"Reliance","Delhi");
+
+insert into Parts values(20001,"Book","Red");
+insert into Parts values(20002,"Pen","Red");
+insert into Parts values(20003,"Pencil","Green");
+insert into Parts values(20004,"Mobile","Green");
+insert into Parts values(20005,"Charger","Black");
+
+insert into Catalog values(10001,20001,10);
+insert into Catalog values(10001,20002,10);
+insert into Catalog values(10001,20003,30);
+insert into Catalog values(10001,20004,10);
+insert into Catalog values(10001,20005,10);
+insert into Catalog values(10002,20001,10);
+insert into Catalog values(10002,20002,20);
+insert into Catalog values(10003,20003,30);
+insert into Catalog values(10004,20003,40);
+
+
+select distinct pname from Parts p, Catalog c where p.pid in (select pid from Catalog c where c.pid=p.pid);
+
+SELECT s.sname
+FROM Supplier s
+WHERE NOT EXISTS (
+    SELECT *
+    FROM Parts p
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM Catalog c
+        WHERE c.sid = s.sid AND c.pid = p.pid
+    )
+);
+
+select sname from Supplier where sid in (select sid from Catalog where pid in (select pid from Parts p where p.color="Red"));
+
+SELECT s.sname
+FROM Supplier s
+WHERE NOT EXISTS (
+    SELECT *
+    FROM Parts p
+    WHERE p.color = 'red' 
+    AND NOT EXISTS (
+        SELECT *
+        FROM Catalog c
+        WHERE c.sid = s.sid AND c.pid = p.pid
+    )
+);
+
+SELECT p.pname
+FROM Parts p
+WHERE p.pid IN (
+    SELECT c.pid
+    FROM Catalog c
+    JOIN Supplier s ON c.sid = s.sid
+    WHERE s.sname = 'Acme Widget')
+AND NOT EXISTS (
+    SELECT 1
+    FROM Catalog c2
+    WHERE c2.pid = p.pid
+    AND c2.sid != (SELECT sid FROM Supplier WHERE sname = 'Acme Widget')
+);
+
+SELECT p.pname, s.sname
+FROM Parts p
+JOIN Catalog c ON p.pid = c.pid
+JOIN Supplier s ON c.sid = s.sid
+WHERE c.cost = (
+    SELECT MAX(c2.cost)
+    FROM Catalog c2
+    WHERE c2.pid = p.pid
+);
+
+SELECT p.pid, s.sname
+FROM Parts p
+JOIN Catalog c ON p.pid = c.pid
+JOIN Supplier s ON c.sid = s.sid
+WHERE c.cost = (
+    SELECT MAX(c2.cost)
+    FROM Catalog c2
+    WHERE c2.pid = p.pid
+)
+ORDER BY p.pname;
